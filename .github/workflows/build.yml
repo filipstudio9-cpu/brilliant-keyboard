@@ -19,6 +19,107 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Generate Clean Android Project Structure
+        run: |
+          mkdir -p app/src/main/res/values
+          mkdir -p app/src/main/res/xml
+          mkdir -p app/src/main/java/com/brilliant/keyboard
+          mkdir -p app/src/main/assets
+
+          cat << 'EOF' > settings.gradle
+          pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
+          rootProject.name = "BrilliantKeyboard"
+          include ':app'
+          EOF
+
+          cat << 'EOF' > gradle.properties
+          android.useAndroidX=true
+          android.enableJetifier=true
+          EOF
+
+          cat << 'EOF' > app/build.gradle
+          plugins {
+              id 'com.android.application' version '8.2.2'
+              id 'org.jetbrains.kotlin.android' version '1.9.22'
+          }
+          android {
+              namespace 'com.brilliant.keyboard'
+              compileSdk 34
+              defaultConfig {
+                  applicationId "com.brilliant.keyboard"
+                  minSdk 24
+                  targetSdk 34
+                  versionCode 1
+                  versionName "1.0"
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+              kotlinOptions {
+                  jvmTarget = '17'
+              }
+          }
+          dependencies {
+              implementation 'androidx.core:core-ktx:1.12.0'
+          }
+          EOF
+
+          cat << 'EOF' > app/src/main/res/values/strings.xml
+          <resources>
+              <string name="app_name">BrilliantKeyboard</string>
+          </resources>
+          EOF
+
+          cat << 'EOF' > app/src/main/res/xml/method.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <input-method xmlns:android="http://android.com">
+              <subtype
+                  android:label="Русский (BrilliantKeyboard)"
+                  android:imeSubtypeLocale="ru_RU"
+                  android:imeSubtypeMode="keyboard" />
+              <subtype
+                  android:label="English (BrilliantKeyboard)"
+                  android:imeSubtypeLocale="en_US"
+                  android:imeSubtypeMode="keyboard" />
+          </input-method>
+          EOF
+
+          cat << 'EOF' > app/src/main/AndroidManifest.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://android.com">
+              <uses-permission android:name="android.permission.VIBRATE" />
+              <uses-permission android:name="android.permission.RECORD_AUDIO" />
+              <application android:label="BrilliantKeyboard">
+                  <service
+                      android:name=".BrilliantIME"
+                      android:label="BrilliantKeyboard"
+                      android:permission="android.permission.BIND_INPUT_METHOD"
+                      android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.view.InputMethod" />
+                      </intent-filter>
+                      <meta-data
+                          android:name="android.view.im"
+                          android:resource="@xml/method" />
+                  </service>
+              </application>
+          </manifest>
+          EOF
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:

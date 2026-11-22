@@ -10,3 +10,7 @@
         android:imeSubtypeLocale="en_US"
         android:imeSubtypeMode="keyboard" />
 </input-method>
+<resources>
+    <string name="app_name">BrilliantKeyboard</string>
+    <string name="ime_name">BrilliantKeyboard</string>
+</resources>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<input-method xmlns:android="http://schemas.android.com/apk/res/android"
-    android:supportsSwitchingToNextInputMethod="true">
+<input-method xmlns:android="http://android.com">
     <subtype
         android:label="Русский (BrilliantKeyboard)"
         android:imeSubtypeLocale="ru_RU"
@@ -10,7 +9,3 @@
         android:imeSubtypeLocale="en_US"
         android:imeSubtypeMode="keyboard" />
 </input-method>
-<resources>
-    <string name="app_name">BrilliantKeyboard</string>
-    <string name="ime_name">BrilliantKeyboard</string>
-</resources>
